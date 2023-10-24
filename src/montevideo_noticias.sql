@@ -176,7 +176,7 @@ VALUES
 ('El presidente de Argentina se reúne con el presidente de Uruguay', 'El presidente de Argentina se reunió con el presidente de Uruguay para tratar temas de interés común', 2, 1, 'El presidente de Argentina se reunió con el presidente de Uruguay para tratar temas de interés común', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
 ('El presidente de Chile se reúne con el presidente de Perú', 'El presidente de Chile se reunió con el presidente de Perú para tratar temas de interés común', 3, 1, 'El presidente de Chile se reunió con el presidente de Perú para tratar temas de interés común', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
 ('El presidente de Perú se reúne con el presidente de Chile', 'El presidente de Perú se reunió con el presidente de Chile para tratar temas de interés común', 4, 1, 'El presidente de Perú se reunió con el presidente de Chile para tratar temas de interés común', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
-('Brasil ganó un partido de tenis histórico contra Argentina', 5, 2, 'Brasil ganó un partido de tenis histórico contra Argentina', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
+('Brasil ganó un partido de tenis histórico contra Argentina', 'Brasil ganó un partido de tenis histórico contra Argentina', 5, 2, 'Brasil ganó un partido de tenis histórico contra Argentina', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
 ('Argentina pierde partido de tenis historico contra Brasil', 'Argentina perdió un partido de tenis histórico contra Brasil', 6, 2, 'Argentina perdió un partido de tenis histórico contra Brasil', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
 ('El nuevo celular de Apple es un éxito de ventas', 'El nuevo celular de Apple es un éxito de ventas en todo el mundo', 7, 3, 'El nuevo celular de Apple es un éxito de ventas en todo el mundo', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
 ('El nuevo celular de Samsung es un éxito de ventas', 'El nuevo celular de Samsung es un éxito de ventas en todo el mundo', 8, 3, 'El nuevo celular de Samsung es un éxito de ventas en todo el mundo', NOW(), 'publicado', 'https://acortar.link/xeURWz', NOW(), NOW()),
@@ -250,9 +250,7 @@ VALUES
 (7, 7),
 (7, 8),
 (8, 7),
-(8, 8),
-(9, 9),
-(9, 10);
+(8, 8);
 
 -- Datos de ejemplo para la tabla de suscriptores
 INSERT INTO suscriptores (usuario_id, categoria_id)
@@ -322,3 +320,42 @@ VALUES
 (4, 16),
 (4, 17),
 (4, 18);
+
+-- Consultas de ejemplo
+
+-- Ver todos los usuarios
+SELECT * FROM usuarios;
+
+-- Ver todas las categorías
+SELECT * FROM categorias;
+
+-- Ver todos los autores
+SELECT * FROM autores;
+
+-- Ver todos los artículos
+SELECT * FROM articulos;
+
+-- Ver todos los comentarios
+SELECT * FROM comentarios;
+
+-- Ver todos los votos
+SELECT * FROM votos;
+
+-- Ver todas las etiquetas
+SELECT * FROM etiquetas;
+
+-- Ver las relaciones entre artículos y etiquetas
+SELECT * FROM articulos_etiquetas;
+
+-- Ver las relaciones entre usuarios y categorías (suscriptores)
+SELECT * FROM suscriptores;
+
+-- Ver todos los roles de usuario
+SELECT * FROM roles_usuario;
+
+-- Ver todos los permisos
+SELECT * FROM permisos;
+
+-- Ver las relaciones entre roles y permisos
+SELECT * FROM roles_permisos;
+
