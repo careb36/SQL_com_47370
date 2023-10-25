@@ -3,7 +3,7 @@ USE montevideo_noticias;
 -- Datos de ejemplo para la tabla de usuarios con fechas aleatorias para el campo creado_en
 INSERT INTO usuarios (nombre, apellido, email, fecha_nacimiento, pais, localidad, foto_perfil, creado_en, actualizado_en)
 VALUES
-('Juan', 'Pérez', 'juan.perez@gmail.com', '1990-01-01', 'Uruguay', 'Montevideo', 'https://acortar.link/xeURWz', '1995-06-12 08:30:00', '2023-10-23 12:00:00'),
+('Juan', 'Pérez', 'juan.perezr@gmail.com', '1990-01-01', 'Uruguay', 'Montevideo', 'https://acortar.link/xeURWz', '1995-06-12 08:30:00', '2023-10-23 12:00:00'),
 ('María', 'González', 'maria.gonzalez@gmail.com', '1992-02-02', 'Argentina', 'Buenos Aires', 'https://acortar.link/xeURWz', '1996-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Carlos', 'Rodriguez', 'carlos.rodriguez@gmail.com', '1993-03-03', 'Chile', 'Santiago', 'https://acortar.link/xeURWz', '1994-07-20 10:15:00', '2023-10-23 12:00:00'),
 ('Ana', 'Martinez', 'ana.martinez@gmail.com', '1994-04-04', 'Peru', 'Lima', 'https://acortar.link/xeURWz', '1997-09-05 11:20:00', '2023-10-23 12:00:00'),
@@ -45,13 +45,12 @@ VALUES
 -- Datos de ejemplo para la tabla de autores
 INSERT INTO autores (nombre, apellido, biografia, redes_sociales, email, creado_en, actualizado_en)
 VALUES
-('Juan Pérez', 'Periodista de investigación', 'Especialista en temas de corrupción política', 'Twitter: @juanperez, Facebook: JuanPérez', 'juan.perez@montevideonoticias.com', '1998-05-15 08:30:00', '2023-10-23 12:00:00'),
+('Juan Pérez', 'Periodista de investigación', 'Especialista en temas de corrupción política', 'Twitter: @juanperez2, Facebook: JuanPérez', 'juan.perezm2@montevideonoticias.com', '1998-05-15 08:30:00', '2023-10-23 12:00:00'),
 ('María González', 'Escritora de ficción', 'Autora de varios libros de éxito', 'Twitter: @mariagonzalez, Instagram: @mariagonzalez', 'maria.gonzalez@montevideonoticias.com', '1998-05-15 08:30:00', '2023-10-23 12:00:00'),
 ('Carlos Rodriguez', 'Analista de tecnología', 'Experto en tecnología y ciencia', 'Twitter: @carlosrodriguez, Instagram: @carlosrodriguez', 'carlos.rodriguez@montevideonoticias.com', '2000-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Ana Martinez', 'Crítica de arte', 'Especialista en arte y cultura', 'Twitter: @anamartinez, Instagram: @anamartinez', 'ana.martinez@montevideonoticias.com', '2001-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Pedro Sánchez', 'Economista', 'Experto en economía y finanzas', 'Twitter: @pedrosanchez, Instagram: @pedrosanchez', 'pedrosanchez@montevideonoticias.com', '2002-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Luisa Fernández', 'Médica', 'Especialista en salud y bienestar', 'Twitter: @luisafernandez, Instagram: @luisafernandez', 'luisafernandez21@montevideonoticias.com', '2003-04-25 09:45:00', '2023-10-23 12:00:00'),
-('Jorge Pérez', 'Sociólogo', 'Experto en temas de sociedad y política', 'Twitter: @jorgeperez, Instagram: @jorgeperez', 'jorgeperez@montevideonoticias.com', '2004-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Marcela González', 'Periodista de viajes', 'Experta en turismo y viajes', 'Twitter: @marcelagonzalez, Instagram: @marcelagonzalez', 'marcelagonzalez@montevideonoticias.com', '2005-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Michael Johnson', 'Periodista de investigación', 'Especialista en temas de corrupción política', 'Twitter: @michaeljohnson, Facebook: MichaelJohnson', 'michaeljohnson@montevideonoticias.com', '2006-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Emily Smith', 'Escritora de ficción', 'Autora de varios libros de éxito', 'Twitter: @emilysmith, Instagram: @emilysmith', 'emilysmith@montevideonoticias.com', '2007-04-25 09:45:00', '2023-10-23 12:00:00'),
@@ -59,7 +58,7 @@ VALUES
 ('Jessica Davis', 'Crítica de arte', 'Especialista en arte y cultura', 'Twitter: @jessicadavis, Instagram: @jessicadavis', 'jessicadavis@montevideonoticias.com', '2009-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Pedro Sánchez', 'Economista', 'Experto en economía y finanzas', 'Twitter: @pedrosanchez, Instagram: @pedrosanchez', 'pedrosanchez@montevideonoticias.com', '2010-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Luisa Fernández', 'Médica', 'Especialista en salud y bienestar', 'Twitter: @luisafernandez, Instagram: @luisafernandez', 'luisafernandez@montevideonoticias.com', '2011-04-25 09:45:00', '2023-10-23 12:00:00'),
-('Jorge Pérez', 'Sociólogo', 'Experto en temas de sociedad y política', 'Twitter: @jorgeperez, Instagram: @jorgeperez', 'jorgeperez@montevideonoticias.com', '2012-04-25 09:45:00', '2023-10-23 12:00:00'),
+('Jorge Pérez', 'Sociólogo', 'Experto en temas de sociedad y política', 'Twitter: @jorgeperez2, Instagram: @jorgeperez2', 'jorgeperez2@montevideonoticias.com', '2012-04-25 09:45:00', '2023-10-23 12:00:00'),
 ('Marcela González', 'Periodista de viajes', 'Experta en turismo y viajes', 'Twitter: @marcelagonzalez, Instagram: @marcelagonzalez', 'marcelagonzalez@montevideonoticias.com', '2013-04-25 09:45:00', '2023-10-23 12:00:00');
 
 
