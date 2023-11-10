@@ -159,6 +159,11 @@ CREATE TABLE IF NOT EXISTS `roles_permisos` (
 CREATE INDEX idx_email_usuarios ON usuarios (email);
 CREATE INDEX idx_email_autores ON autores (email);
 
+
+-- chequear el formato de correo electronico para prevenir inyecciones de SQL
+ALTER TABLE usuarios ADD CONSTRAINT chk_email_format 
+CHECK (email REGEXP '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
 -- Vistas
 -- Crear una vista de los artículos más votados ordenados por la suma total de votos.
 
