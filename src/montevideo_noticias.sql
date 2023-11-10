@@ -1,134 +1,119 @@
 -- Crear la base de datos Montevideo Noticias
-CREATE DATABASE montevideo_noticias;
+CREATE DATABASE montevideo_noticias CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Seleccionar la base de datos Montevideo Noticias
 USE montevideo_noticias;
 
 -- Crear la tabla de usuarios
-CREATE TABLE `usuarios` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nombre` VARCHAR(255),
-  `apellido` VARCHAR(255),
-  `email` VARCHAR(255) UNIQUE NOT NULL,
-  `fecha_nacimiento` DATE,
-  `pais` VARCHAR(255),
-  `localidad` VARCHAR(255),
-  `foto_perfil` VARCHAR(255),
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+_create table `usuarios` (
+  `id` int auto_increment primary key,
+  `nombre` varchar not null(255),
+  `apellido` varchar not null(255),
+  `email` varchar not null(255) unique not null,
+  `fecha_nacimiento` date,
+  `pais` varchar(100),
+  `localidad` varchar(100),
+  `foto_perfil` varchar(100),
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp
 );
 
 -- Crear la tabla de categorías
-CREATE TABLE `categorias` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nombre` VARCHAR(255) UNIQUE NOT NULL,
-  `descripcion` TEXT,
-  `imagen` VARCHAR(255),
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+_create table `categorias` (
+  `id` int auto_increment primary key,
+  `nombre` varchar not null(255) unique not null,
+  `descripcion` text,
+  `imagen` varchar(100),
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp
 );
 
 -- Crear la tabla de autores
-CREATE TABLE `autores` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nombre` VARCHAR(255),
-  `apellido` VARCHAR(255),
-  `biografia` TEXT,
-  `redes_sociales` TEXT,
-  `email` VARCHAR(255) UNIQUE NOT NULL,
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+_create table `autores` (
+  `id` int auto_increment primary key,
+  `nombre` varchar not null(255),
+  `apellido` varchar not null(255),
+  `biografia` text,
+  `redes_sociales` text,
+  `email` varchar not null(255) unique not null,
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp
 );
 
 -- Crear la tabla de artículos
-CREATE TABLE `articulos` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `titulo` VARCHAR(255),
-  `cuerpo` TEXT,
-  `autor_id` INT,
-  `categoria_id` INT,
-  `resumen` TEXT,
-  `fecha_publicacion` TIMESTAMP,
-  `estado_publicacion` VARCHAR(255),
-  `imagen` VARCHAR(255),
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (`autor_id`) REFERENCES `autores` (`id`),
-  FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`)
+_create table `articulos` (
+  `id` int auto_increment primary key,
+  `titulo` varchar(100),
+  `cuerpo` text,
+  `autor_id` int,
+  `categoria_id` int,
+  `resumen` text,
+  `fecha_publicacion` timestamp,
+  `estado_publicacion` varchar(100),
+  `imagen` varchar(100),
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp, foreign key (`autor_id`) references `autores` (`id`), foreign key (`categoria_id`) references `categorias` (`id`)
 );
 
 -- Crear la tabla de comentarios
-CREATE TABLE `comentarios` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `articulo_id` INT,
-  `autor_id` INT,
-  `cuerpo` TEXT,
-  `fecha_publicacion` TIMESTAMP,
-  `estado_publicacion` VARCHAR(255),
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (`articulo_id`) REFERENCES `articulos` (`id`),
-  FOREIGN KEY (`autor_id`) REFERENCES `usuarios` (`id`)
+_create table `comentarios` (
+  `id` int auto_increment primary key,
+  `articulo_id` int,
+  `autor_id` int,
+  `cuerpo` text,
+  `fecha_publicacion` timestamp,
+  `estado_publicacion` varchar(100),
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp, foreign key (`articulo_id`) references `articulos` (`id`), foreign key (`autor_id`) references `usuarios` (`id`)
 );
 
--- Modificar la tabla de votos para permitir valores negativos
-CREATE TABLE `votos` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `articulo_id` INT,
-  `autor_id` INT,
-  `voto` INT,
-  `fecha_voto` TIMESTAMP,
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (`articulo_id`) REFERENCES `articulos` (`id`),
-  FOREIGN KEY (`autor_id`) REFERENCES `usuarios` (`id`)
+-- Crear tabla de votos que permite valores negativos
+_create table `votos` (
+  `id` int auto_increment primary key,
+  `articulo_id` int,
+  `autor_id` int,
+  `voto` int,
+  `fecha_voto` timestamp,
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp, foreign key (`articulo_id`) references `articulos` (`id`), foreign key (`autor_id`) references `usuarios` (`id`)
 );
 
 -- Crear la tabla de etiquetas
-CREATE TABLE `etiquetas` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nombre` VARCHAR(255) UNIQUE NOT NULL,
-  `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `actualizado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+_create table `etiquetas` (
+  `id` int auto_increment primary key,
+  `nombre` varchar not null(255) unique not null,
+  `creado_en` timestamp not null default current_timestamp,
+  `actualizado_en` timestamp not null default current_timestamp on update current_timestamp
 );
 
 -- Crear la tabla de artículos_etiquetas para relacionar etiquetas con artículos
-CREATE TABLE `articulos_etiquetas` (
-  `articulo_id` INT,
-  `etiqueta_id` INT,
-  PRIMARY KEY (`articulo_id`, `etiqueta_id`),
-  FOREIGN KEY (`articulo_id`) REFERENCES `articulos` (`id`),
-  FOREIGN KEY (`etiqueta_id`) REFERENCES `etiquetas` (`id`)
+_create table `articulos_etiquetas` (
+  `articulo_id` int,
+  `etiqueta_id` int, primary key (`articulo_id`, `etiqueta_id`), foreign key (`articulo_id`) references `articulos` (`id`), foreign key (`etiqueta_id`) references `etiquetas` (`id`)
 );
 
 -- Crear la tabla de suscriptores
-CREATE TABLE `suscriptores` (
-  `usuario_id` INT,
-  `categoria_id` INT,
-  PRIMARY KEY (`usuario_id`, `categoria_id`),
-  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
-  FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`)
+_create table `suscriptores` (
+  `usuario_id` int,
+  `categoria_id` int, primary key (`usuario_id`, `categoria_id`), foreign key (`usuario_id`) references `usuarios` (`id`), foreign key (`categoria_id`) references `categorias` (`id`)
 );
 
 -- Crear la tabla de roles de usuario
-CREATE TABLE `roles_usuario` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nombre` VARCHAR(255) UNIQUE NOT NULL
+_create table `roles_usuario` (
+  `id` int auto_increment primary key,
+  `nombre` varchar not null(255) unique not null
 );
 
 -- Crear la tabla de permisos
-CREATE TABLE `permisos` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nombre` VARCHAR(255) UNIQUE NOT NULL
+_create table `permisos` (
+  `id` int auto_increment primary key,
+  `nombre` varchar not null(255) unique not null
 );
 
 -- Crear la tabla de roles_permisos para relacionar roles y permisos
-CREATE TABLE `roles_permisos` (
-  `rol_id` INT,
-  `permiso_id` INT,
-  PRIMARY KEY (`rol_id`, `permiso_id`),
-  FOREIGN KEY (`rol_id`) REFERENCES `roles_usuario` (`id`),
-  FOREIGN KEY (`permiso_id`) REFERENCES `permisos` (`id`)
+_create table `roles_permisos` (
+  `rol_id` int,
+  `permiso_id` int, primary key (`rol_id`, `permiso_id`), foreign key (`rol_id`) references `roles_usuario` (`id`), foreign key (`permiso_id`) references `permisos` (`id`)
 );
 
 -- Crear índices para mejorar el rendimiento de las consultas
@@ -137,11 +122,11 @@ CREATE INDEX idx_email_autores ON autores (email);
 
 
 -- Crear tabla de registro para artículos
-CREATE TABLE `articulos_log` (
-  `log_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `articulo_id` INT,
-  `accion` VARCHAR(255),
-  `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+_create table `articulos_log` (
+  `log_id` int auto_increment primary key,
+  `articulo_id` int,
+  `accion` varchar(100),
+  `fecha_registro` timestamp not null default current_timestamp
 );
 
 -- Vistas
@@ -288,11 +273,11 @@ END;
 DELIMITER ;
 
 -- Crear tabla de registro para comentarios
-CREATE TABLE `comentarios_log` (
-  `log_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `comentario_id` INT,
-  `accion` VARCHAR(255),
-  `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+_create table `comentarios_log` (
+  `log_id` int auto_increment primary key,
+  `comentario_id` int,
+  `accion` varchar(100),
+  `fecha_registro` timestamp not null default current_timestamp
 );
 
 -- Trigger BEFORE para comentarios (antes de la operación)
@@ -315,5 +300,5 @@ BEGIN
   INSERT INTO `comentarios_log` (`comentario_id`, `accion`) VALUES (NEW.`id`, 'INSERT');
 END;
 //
-DELIMITER ;
+DELIMITER;
 
