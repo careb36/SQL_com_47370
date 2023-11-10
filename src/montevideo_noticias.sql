@@ -273,7 +273,7 @@ END;
 DELIMITER ;
 
 -- Crear tabla de registro para comentarios
- table `comentarios_log` (
+ create table `comentarios_log` (
   `log_id` int auto_increment primary key,
   `comentario_id` int,
   `accion` varchar(100),
