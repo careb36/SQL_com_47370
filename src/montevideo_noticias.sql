@@ -5,11 +5,11 @@ CREATE DATABASE montevideo_noticias CHARACTER SET utf8mb4 COLLATE utf8mb4_unicod
 USE montevideo_noticias;
 
 -- Crear la tabla de usuarios
-_create table `usuarios` (
+create table `usuarios` (
   `id` int auto_increment primary key,
-  `nombre` varchar not null(255),
-  `apellido` varchar not null(255),
-  `email` varchar not null(255) unique not null,
+  `nombre` varchar(255) not null,
+  `apellido` varchar(255) not null,
+  `email` varchar(255) not null unique not null,
   `fecha_nacimiento` date,
   `pais` varchar(100),
   `localidad` varchar(100),
@@ -19,9 +19,9 @@ _create table `usuarios` (
 );
 
 -- Crear la tabla de categorías
-_create table `categorias` (
+ create table `categorias` (
   `id` int auto_increment primary key,
-  `nombre` varchar not null(255) unique not null,
+  `nombre` varchar(255) unique not null,
   `descripcion` text,
   `imagen` varchar(100),
   `creado_en` timestamp not null default current_timestamp,
@@ -29,19 +29,19 @@ _create table `categorias` (
 );
 
 -- Crear la tabla de autores
-_create table `autores` (
+ create table `autores` (
   `id` int auto_increment primary key,
-  `nombre` varchar not null(255),
-  `apellido` varchar not null(255),
+  `nombre` varchar(255) not null,
+  `apellido` varchar(255) not null,
   `biografia` text,
   `redes_sociales` text,
-  `email` varchar not null(255) unique not null,
+  `email` varchar(255) unique not null,
   `creado_en` timestamp not null default current_timestamp,
   `actualizado_en` timestamp not null default current_timestamp on update current_timestamp
 );
 
 -- Crear la tabla de artículos
-_create table `articulos` (
+ create table `articulos` (
   `id` int auto_increment primary key,
   `titulo` varchar(100),
   `cuerpo` text,
@@ -56,7 +56,7 @@ _create table `articulos` (
 );
 
 -- Crear la tabla de comentarios
-_create table `comentarios` (
+ create table `comentarios` (
   `id` int auto_increment primary key,
   `articulo_id` int,
   `autor_id` int,
@@ -68,7 +68,7 @@ _create table `comentarios` (
 );
 
 -- Crear tabla de votos que permite valores negativos
-_create table `votos` (
+ create table `votos` (
   `id` int auto_increment primary key,
   `articulo_id` int,
   `autor_id` int,
@@ -79,39 +79,39 @@ _create table `votos` (
 );
 
 -- Crear la tabla de etiquetas
-_create table `etiquetas` (
+ create table `etiquetas` (
   `id` int auto_increment primary key,
-  `nombre` varchar not null(255) unique not null,
+  `nombre` varchar(255) unique not null,
   `creado_en` timestamp not null default current_timestamp,
   `actualizado_en` timestamp not null default current_timestamp on update current_timestamp
 );
 
 -- Crear la tabla de artículos_etiquetas para relacionar etiquetas con artículos
-_create table `articulos_etiquetas` (
+ create table `articulos_etiquetas` (
   `articulo_id` int,
   `etiqueta_id` int, primary key (`articulo_id`, `etiqueta_id`), foreign key (`articulo_id`) references `articulos` (`id`), foreign key (`etiqueta_id`) references `etiquetas` (`id`)
 );
 
 -- Crear la tabla de suscriptores
-_create table `suscriptores` (
+ create table `suscriptores` (
   `usuario_id` int,
   `categoria_id` int, primary key (`usuario_id`, `categoria_id`), foreign key (`usuario_id`) references `usuarios` (`id`), foreign key (`categoria_id`) references `categorias` (`id`)
 );
 
 -- Crear la tabla de roles de usuario
-_create table `roles_usuario` (
+ create table `roles_usuario` (
   `id` int auto_increment primary key,
-  `nombre` varchar not null(255) unique not null
+  `nombre` varchar(255) unique not null
 );
 
 -- Crear la tabla de permisos
-_create table `permisos` (
+ create table `permisos` (
   `id` int auto_increment primary key,
-  `nombre` varchar not null(255) unique not null
+  `nombre` varchar(255) unique not null
 );
 
 -- Crear la tabla de roles_permisos para relacionar roles y permisos
-_create table `roles_permisos` (
+ create table `roles_permisos` (
   `rol_id` int,
   `permiso_id` int, primary key (`rol_id`, `permiso_id`), foreign key (`rol_id`) references `roles_usuario` (`id`), foreign key (`permiso_id`) references `permisos` (`id`)
 );
@@ -122,7 +122,7 @@ CREATE INDEX idx_email_autores ON autores (email);
 
 
 -- Crear tabla de registro para artículos
-_create table `articulos_log` (
+ create table `articulos_log` (
   `log_id` int auto_increment primary key,
   `articulo_id` int,
   `accion` varchar(100),
@@ -273,7 +273,7 @@ END;
 DELIMITER ;
 
 -- Crear tabla de registro para comentarios
-_create table `comentarios_log` (
+ table `comentarios_log` (
   `log_id` int auto_increment primary key,
   `comentario_id` int,
   `accion` varchar(100),
@@ -300,5 +300,6 @@ BEGIN
   INSERT INTO `comentarios_log` (`comentario_id`, `accion`) VALUES (NEW.`id`, 'INSERT');
 END;
 //
-DELIMITER;
+DELIMITER ;
+
 
