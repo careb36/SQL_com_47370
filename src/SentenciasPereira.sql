@@ -7,7 +7,6 @@ CREATE USER 'usu_lectura'@'localhost' IDENTIFIED BY 'readonly12345';
 -- Otorgar permiso SELECT (lectura) a 'usu_lectura' en todas las tablas en el esquema montevideo_noticias
 GRANT SELECT ON montevideo_noticias.* TO 'usu_lectura'@'localhost';
 
-
 -- Crea un nuevo usuario llamado 'usu_modifica' con permisos de lectura, inserción y actualización
 CREATE USER 'usu_modifica'@'localhost' IDENTIFIED BY 'modify12345';
 
