@@ -1,0 +1,120 @@
+@startuml
+'idea.partialRender
+
+' Tablas
+class Usuarios {
+  +id INT AUTO_INCREMENT
+  nombre VARCHAR(255)
+  apellido VARCHAR(255)
+  email VARCHAR(255) UNIQUE
+  fecha_nacimiento DATE
+  pais VARCHAR(100)
+  localidad VARCHAR(100)
+  foto_perfil VARCHAR(255)
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Categorias {
+  +id INT AUTO_INCREMENT
+  nombre VARCHAR(255) UNIQUE
+  descripcion TEXT
+  imagen VARCHAR(255)
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Autores {
+  +id INT AUTO_INCREMENT
+  nombre VARCHAR(255)
+  apellido VARCHAR(255)
+  biografia TEXT
+  redes_sociales TEXT
+  email VARCHAR(255) UNIQUE
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Articulos {
+  +id INT AUTO_INCREMENT
+  titulo VARCHAR(255)
+  cuerpo TEXT
+  autor_id INT
+  categoria_id INT
+  resumen TEXT
+  fecha_publicacion TIMESTAMP
+  estado_publicacion VARCHAR(100)
+  imagen VARCHAR(255)
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Comentarios {
+  +id INT AUTO_INCREMENT
+  articulo_id INT
+  autor_id INT
+  cuerpo TEXT
+  fecha_publicacion TIMESTAMP
+  estado_publicacion VARCHAR(100)
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Votos {
+  +id INT AUTO_INCREMENT
+  articulo_id INT
+  autor_id INT
+  voto INT
+  fecha_voto TIMESTAMP
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Etiquetas {
+  +id INT AUTO_INCREMENT
+  nombre VARCHAR(255) UNIQUE
+  creado_en TIMESTAMP
+  actualizado_en TIMESTAMP
+}
+
+class Articulos_Etiquetas {
+  articulo_id INT
+  etiqueta_id INT
+}
+
+class Suscriptores {
+  usuario_id INT
+  categoria_id INT
+}
+
+class Roles_usuario {
+  +id INT AUTO_INCREMENT
+  nombre VARCHAR(255) UNIQUE
+}
+
+class Permisos {
+  +id INT AUTO_INCREMENT
+  nombre VARCHAR(255) UNIQUE
+}
+
+class Roles_permisos {
+  rol_id INT
+  permiso_id INT
+}
+
+' Relaciones
+Autores "1" --o "0..N" Articulos
+Categorias "1" --o "0..N" Articulos
+Usuarios "1" --o "0..N" Comentarios
+Articulos "1" --o "0..N" Comentarios
+Usuarios "1" --o "0..N" Votos
+Articulos "1" --o "0..N" Votos
+Articulos "0..N" -- "0..N" Etiquetas
+Usuarios "1" --o "0..N" Suscriptores
+Categorias "1" --o "0..N" Suscriptores
+Roles_usuario "1" --o "0..N" Roles_permisos
+Permisos "1" --o "0..N" Roles_permisos
+Articulos_Etiquetas "*" -- "*" Articulos
+Articulos_Etiquetas "*" -- "*" Etiquetas
+
+@enduml
