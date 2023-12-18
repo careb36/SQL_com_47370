@@ -25,10 +25,10 @@ CREATE USER 'usu_modifica'@'localhost' IDENTIFIED BY 'modify12345';
 -- Otorgar permisos SELECT (lectura), INSERT y UPDATE a 'usu_modifica' en todas las tablas en el esquema montevideo_noticias
 GRANT SELECT, INSERT, UPDATE ON montevideo_noticias.* TO 'usu_modifica'@'localhost';
 
--- Para borrar los usuarios descomentar
--- DROP USER 'usu_lectura'@'localhost';
--- DROP USER 'usu_modifica'@'localhost';
--- FLUSH PRIVILEGES;
+-- Para borrar los usuarios
+DROP USER 'usu_lectura'@'localhost';
+DROP USER 'usu_modifica'@'localhost';
+FLUSH PRIVILEGES;
 
 -- ******************************************************************************************************************
 -- ****************************** TABLAS PARA LAS ENTIDADES Y RELACIONES ********************************************
@@ -273,6 +273,267 @@ ALTER TABLE usuarios
     ADD CONSTRAINT chk_email_format
         CHECK (email REGEXP '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
+
+-- ******************************************************************************************************************
+-- *********************************************** VISTAS ***********************************************************
+-- ******************************************************************************************************************
+
+-- Crear una vista de los artículos más votados ordenados por la suma total de votos.
+CREATE OR REPLACE VIEW `articulos_mas_votados` AS
+SELECT a.`id`,
+       a.`titulo`,
+       a.`cuerpo`,
+       a.`autor_id`,
+       a.`categoria_id`,
+       a.`resumen`,
+       a.`fecha_publicacion`,
+       a.`estado_publicacion`,
+       a.`imagen`,
+       a.`creado_en`,
+       a.`actualizado_en`,
+       SUM(v.`voto`) AS `votos`
+FROM `articulos` a
+         JOIN `votos` v ON a.`id` = v.`articulo_id`
+GROUP BY a.`id`
+ORDER BY `votos` DESC;
+
+-- Crear una vista de los artículos con más comentarios ordenados por la cantidad total de comentarios.
+CREATE OR REPLACE VIEW `articulos_mas_comentados` AS
+SELECT a.`id`,
+       a.`titulo`,
+       a.`cuerpo`,
+       a.`autor_id`,
+       a.`categoria_id`,
+       a.`resumen`,
+       a.`fecha_publicacion`,
+       a.`estado_publicacion`,
+       a.`imagen`,
+       a.`creado_en`,
+       a.`actualizado_en`,
+       COUNT(c.`id`) AS `comentarios`
+FROM `articulos` a
+         JOIN `comentarios` c ON a.`id` = c.`articulo_id`
+GROUP BY a.`id`
+ORDER BY `comentarios` DESC;
+
+-- Crear una vista de los autores con más artículos publicados ordenados por la cantidad total de artículos.
+CREATE OR REPLACE VIEW `autores_mas_productivos` AS
+SELECT a.`id`,
+       a.`nombre`,
+       a.`apellido`,
+       a.`biografia`,
+       a.`redes_sociales`,
+       a.`email`,
+       a.`creado_en`,
+       a.`actualizado_en`,
+       COUNT(ar.`id`) AS `articulos`
+FROM `autores` a
+         JOIN `articulos` ar ON a.`id` = ar.`autor_id`
+GROUP BY a.`id`
+ORDER BY `articulos` DESC;
+
+-- Crear una vista de las noticias más populares ordenadas por la suma total de votos y comentarios.
+CREATE OR REPLACE VIEW `noticias_mas_populares` AS
+SELECT a.`id`,
+       a.`titulo`,
+       a.`autor_id`,
+       a.`categoria_id`,
+       a.`fecha_publicacion`,
+       a.`estado_publicacion`,
+       a.`creado_en`,
+       a.`actualizado_en`,
+       SUM(v.`voto`) AS `votos`,
+       COUNT(c.`id`) AS `comentarios`
+FROM `articulos` a
+         JOIN `votos` v ON a.`id` = v.`articulo_id`
+         JOIN `comentarios` c ON a.`id` = c.`articulo_id`
+GROUP BY a.`id`
+ORDER BY `votos` DESC, `comentarios` DESC;
+
+-- Crear una vista de los usuarios con más comentarios ordenados por la cantidad total de comentarios.
+CREATE OR REPLACE VIEW `usuarios_mas_comentadores` AS
+SELECT u.`id`,
+       u.`nombre`,
+       u.`apellido`,
+       u.`email`,
+       u.`fecha_nacimiento`,
+       u.`pais`,
+       u.`localidad`,
+       u.`foto_perfil`,
+       u.`creado_en`,
+       u.`actualizado_en`,
+       COUNT(c.`id`) AS `comentarios`
+FROM `usuarios` u
+         JOIN `comentarios` c ON u.`id` = c.`autor_id`
+GROUP BY u.`id`
+ORDER BY `comentarios` DESC;
+
+-- ******************************************************************************************************************
+-- *********************************************** FUNCIONES ********************************************************
+-- ******************************************************************************************************************
+
+DELIMITER //
+
+-- Función para obtener la cantidad de comentarios de un artículo
+CREATE FUNCTION `obtener_cantidad_comentarios`(articulo_id INT) RETURNS INT
+    DETERMINISTIC
+    READS SQL DATA
+BEGIN
+    DECLARE cantidad_comentarios INT DEFAULT 0;
+    SELECT COUNT(*) INTO cantidad_comentarios FROM `comentarios` WHERE `articulo_id` = articulo_id;
+    RETURN cantidad_comentarios;
+END//
+
+-- Función para obtener la cantidad de votos de un artículo
+CREATE FUNCTION `obtener_cantidad_votos`(articulo_id INT) RETURNS INT
+    DETERMINISTIC
+    READS SQL DATA
+BEGIN
+    DECLARE cantidad_votos INT DEFAULT 0;
+    SELECT SUM(`voto`) INTO cantidad_votos FROM `votos` WHERE `articulo_id` = articulo_id;
+    RETURN cantidad_votos;
+END//
+
+-- Función para obtener la calificación promedio de un artículo
+CREATE FUNCTION `obtener_calificacion_promedio`(articulo_id INT) RETURNS DECIMAL(4, 2)
+    DETERMINISTIC
+    READS SQL DATA
+BEGIN
+    DECLARE calificacion_promedio DECIMAL(4, 2) DEFAULT 0.00;
+    SELECT AVG(`voto`) INTO calificacion_promedio FROM `votos` WHERE `articulo_id` = articulo_id;
+    RETURN calificacion_promedio;
+END//
+
+DELIMITER ;
+
+-- ******************************************************************************************************************
+-- *********************************************** PROCEDIMIENTOS ***************************************************
+-- ******************************************************************************************************************
+
+DELIMITER //
+
+-- Procedimiento para ordenar artículos
+CREATE PROCEDURE `OrdenarArticulos`(
+    IN ordenCampo VARCHAR(50), -- Field by which the articles will be sorted
+    IN ordenDireccion VARCHAR(4) -- Direction of sort (ASC or DESC)
+)
+BEGIN
+    SET @query = CONCAT('SELECT * FROM `articulos` ORDER BY ', ordenCampo, ' ', ordenDireccion);
+    PREPARE dynamic_query FROM @query;
+    EXECUTE dynamic_query;
+    DEALLOCATE PREPARE dynamic_query;
+END //
+
+-- Procedimiento para insertar o eliminar un artículo
+CREATE PROCEDURE `InsertarEliminarArticulo`(
+    IN accion INT, -- 1 to insert, 2 to delete
+    IN tituloArt VARCHAR(255), -- Article's title (for insertion)
+    IN cuerpoArt TEXT, -- Body of the article (for insertion)
+    IN autorID INT, -- Author's ID (for insertion)
+    IN categoriaID INT, -- Category ID (for insertion)
+    IN resumenArt TEXT, -- Article's summary (for insertion)
+    IN estadoArt ENUM ('publicado', 'borrador'), -- Publication state (for insertion)
+    IN imagenArt VARCHAR(255), -- Image URL (for insertion)
+    IN articuloID INT -- Article ID (for deletion)
+)
+BEGIN
+    IF accion = 1 THEN
+        -- Insert a new article
+        INSERT INTO `articulos` (titulo, cuerpo, autor_id, categoria_id, resumen, fecha_publicacion, estado_publicacion,
+                                 imagen, creado_en, actualizado_en)
+        VALUES (tituloArt, cuerpoArt, autorID, categoriaID, resumenArt, NOW(), estadoArt, imagenArt, NOW(), NOW());
+    ELSEIF accion = 2 THEN
+        -- Delete an article by ID
+        DELETE FROM `articulos` WHERE `id` = articuloID;
+    ELSE
+        -- Invalid action
+        SELECT 'Invalid action. Use 1 to insert or 2 to delete.';
+    END IF;
+END //
+
+DELIMITER ;
+
+-- ******************************************************************************************************************
+-- *********************************************** TRIGGERS *********************************************************
+-- ******************************************************************************************************************
+
+-- Triggers para artículos
+
+-- Trigger BEFORE INSERT
+DELIMITER //
+CREATE TRIGGER `before_articulos_insert`
+    BEFORE INSERT
+    ON `articulos`
+    FOR EACH ROW
+BEGIN
+    INSERT INTO `articulos_log` (`articulo_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'INSERT', NOW());
+END;
+//
+DELIMITER ;
+
+-- Trigger AFTER UPDATE
+DELIMITER //
+CREATE TRIGGER `after_articulos_update`
+    AFTER UPDATE
+    ON `articulos`
+    FOR EACH ROW
+BEGIN
+    INSERT INTO `articulos_log` (`articulo_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'UPDATE', NOW());
+END;
+//
+DELIMITER ;
+
+-- Triggers para comentarios
+
+-- Trigger BEFORE DELETE
+DELIMITER //
+CREATE TRIGGER `before_comentarios_delete`
+    BEFORE DELETE
+    ON `comentarios`
+    FOR EACH ROW
+BEGIN
+    INSERT INTO `comentarios_log` (`comentario_id`, `accion`, `fecha_registro`) VALUES (OLD.`id`, 'DELETE', NOW());
+END;
+//
+DELIMITER ;
+
+-- Trigger AFTER INSERT
+DELIMITER //
+CREATE TRIGGER `after_comentarios_insert`
+    AFTER INSERT
+    ON `comentarios`
+    FOR EACH ROW
+BEGIN
+    INSERT INTO `comentarios_log` (`comentario_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'INSERT', NOW());
+END;
+//
+DELIMITER ;
+
+-- Triggers para la tabla votos
+
+-- Trigger BEFORE DELETE
+DELIMITER //
+CREATE TRIGGER `before_votos_delete`
+    BEFORE DELETE
+    ON `votos`
+    FOR EACH ROW
+BEGIN
+    INSERT INTO `votos_log` (`voto_id`, `accion`, `fecha_registro`) VALUES (OLD.`id`, 'DELETE', NOW());
+END;
+//
+DELIMITER ;
+
+-- Trigger AFTER INSERT
+DELIMITER //
+CREATE TRIGGER `after_votos_insert`
+    AFTER INSERT
+    ON `votos`
+    FOR EACH ROW
+BEGIN
+    INSERT INTO `votos_log` (`voto_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'INSERT', NOW());
+END;
+//
+DELIMITER ;
 
 -- ******************************************************************************************************************
 -- ******************************* INSERCION DE DATOS DE EJEMPLO ****************************************************
@@ -656,266 +917,15 @@ VALUES (1, 1),
        (1, 7),
        (1, 8);
 
--- ******************************************************************************************************************
--- *********************************************** VISTAS ***********************************************************
--- ******************************************************************************************************************
-
--- Crear una vista de los artículos más votados ordenados por la suma total de votos.
-CREATE OR REPLACE VIEW `articulos_mas_votados` AS
-SELECT a.`id`,
-       a.`titulo`,
-       a.`cuerpo`,
-       a.`autor_id`,
-       a.`categoria_id`,
-       a.`resumen`,
-       a.`fecha_publicacion`,
-       a.`estado_publicacion`,
-       a.`imagen`,
-       a.`creado_en`,
-       a.`actualizado_en`,
-       SUM(v.`voto`) AS `votos`
-FROM `articulos` a
-         JOIN `votos` v ON a.`id` = v.`articulo_id`
-GROUP BY a.`id`
-ORDER BY `votos` DESC;
-
--- Crear una vista de los artículos con más comentarios ordenados por la cantidad total de comentarios.
-CREATE OR REPLACE VIEW `articulos_mas_comentados` AS
-SELECT a.`id`,
-       a.`titulo`,
-       a.`cuerpo`,
-       a.`autor_id`,
-       a.`categoria_id`,
-       a.`resumen`,
-       a.`fecha_publicacion`,
-       a.`estado_publicacion`,
-       a.`imagen`,
-       a.`creado_en`,
-       a.`actualizado_en`,
-       COUNT(c.`id`) AS `comentarios`
-FROM `articulos` a
-         JOIN `comentarios` c ON a.`id` = c.`articulo_id`
-GROUP BY a.`id`
-ORDER BY `comentarios` DESC;
-
--- Crear una vista de los autores con más artículos publicados ordenados por la cantidad total de artículos.
-CREATE OR REPLACE VIEW `autores_mas_productivos` AS
-SELECT a.`id`,
-       a.`nombre`,
-       a.`apellido`,
-       a.`biografia`,
-       a.`redes_sociales`,
-       a.`email`,
-       a.`creado_en`,
-       a.`actualizado_en`,
-       COUNT(ar.`id`) AS `articulos`
-FROM `autores` a
-         JOIN `articulos` ar ON a.`id` = ar.`autor_id`
-GROUP BY a.`id`
-ORDER BY `articulos` DESC;
-
--- Crear una vista de las noticias más populares ordenadas por la suma total de votos y comentarios.
-CREATE OR REPLACE VIEW `noticias_mas_populares` AS
-SELECT a.`id`,
-       a.`titulo`,
-       a.`autor_id`,
-       a.`categoria_id`,
-       a.`fecha_publicacion`,
-       a.`estado_publicacion`,
-       a.`creado_en`,
-       a.`actualizado_en`,
-       SUM(v.`voto`) AS `votos`,
-       COUNT(c.`id`) AS `comentarios`
-FROM `articulos` a
-         JOIN `votos` v ON a.`id` = v.`articulo_id`
-         JOIN `comentarios` c ON a.`id` = c.`articulo_id`
-GROUP BY a.`id`
-ORDER BY `votos` DESC, `comentarios` DESC;
-
--- Crear una vista de los usuarios con más comentarios ordenados por la cantidad total de comentarios.
-CREATE OR REPLACE VIEW `usuarios_mas_comentadores` AS
-SELECT u.`id`,
-       u.`nombre`,
-       u.`apellido`,
-       u.`email`,
-       u.`fecha_nacimiento`,
-       u.`pais`,
-       u.`localidad`,
-       u.`foto_perfil`,
-       u.`creado_en`,
-       u.`actualizado_en`,
-       COUNT(c.`id`) AS `comentarios`
-FROM `usuarios` u
-         JOIN `comentarios` c ON u.`id` = c.`autor_id`
-GROUP BY u.`id`
-ORDER BY `comentarios` DESC;
-
--- ******************************************************************************************************************
--- *********************************************** FUNCIONES ********************************************************
--- ******************************************************************************************************************
-
-DELIMITER //
-
--- Función para obtener la cantidad de comentarios de un artículo
-CREATE FUNCTION `obtener_cantidad_comentarios`(articulo_id INT) RETURNS INT
-    DETERMINISTIC
-    READS SQL DATA
-BEGIN
-    DECLARE cantidad_comentarios INT DEFAULT 0;
-    SELECT COUNT(*) INTO cantidad_comentarios FROM `comentarios` WHERE `articulo_id` = articulo_id;
-    RETURN cantidad_comentarios;
-END//
-
--- Función para obtener la cantidad de votos de un artículo
-CREATE FUNCTION `obtener_cantidad_votos`(articulo_id INT) RETURNS INT
-    DETERMINISTIC
-    READS SQL DATA
-BEGIN
-    DECLARE cantidad_votos INT DEFAULT 0;
-    SELECT SUM(`voto`) INTO cantidad_votos FROM `votos` WHERE `articulo_id` = articulo_id;
-    RETURN cantidad_votos;
-END//
-
--- Función para obtener la calificación promedio de un artículo
-CREATE FUNCTION `obtener_calificacion_promedio`(articulo_id INT) RETURNS DECIMAL(4, 2)
-    DETERMINISTIC
-    READS SQL DATA
-BEGIN
-    DECLARE calificacion_promedio DECIMAL(4, 2) DEFAULT 0.00;
-    SELECT AVG(`voto`) INTO calificacion_promedio FROM `votos` WHERE `articulo_id` = articulo_id;
-    RETURN calificacion_promedio;
-END//
-
-DELIMITER ;
-
--- ******************************************************************************************************************
--- *********************************************** PROCEDIMIENTOS ***************************************************
--- ******************************************************************************************************************
-
-DELIMITER //
-
--- Procedimiento para ordenar artículos
-CREATE PROCEDURE `OrdenarArticulos`(
-    IN ordenCampo VARCHAR(50), -- Field by which the articles will be sorted
-    IN ordenDireccion VARCHAR(4) -- Direction of sort (ASC or DESC)
-)
-BEGIN
-    SET @query = CONCAT('SELECT * FROM `articulos` ORDER BY ', ordenCampo, ' ', ordenDireccion);
-    PREPARE dynamic_query FROM @query;
-    EXECUTE dynamic_query;
-    DEALLOCATE PREPARE dynamic_query;
-END //
-
--- Procedimiento para insertar o eliminar un artículo
-CREATE PROCEDURE `InsertarEliminarArticulo`(
-    IN accion INT, -- 1 to insert, 2 to delete
-    IN tituloArt VARCHAR(255), -- Article's title (for insertion)
-    IN cuerpoArt TEXT, -- Body of the article (for insertion)
-    IN autorID INT, -- Author's ID (for insertion)
-    IN categoriaID INT, -- Category ID (for insertion)
-    IN resumenArt TEXT, -- Article's summary (for insertion)
-    IN estadoArt ENUM ('publicado', 'borrador'), -- Publication state (for insertion)
-    IN imagenArt VARCHAR(255), -- Image URL (for insertion)
-    IN articuloID INT -- Article ID (for deletion)
-)
-BEGIN
-    IF accion = 1 THEN
-        -- Insert a new article
-        INSERT INTO `articulos` (titulo, cuerpo, autor_id, categoria_id, resumen, fecha_publicacion, estado_publicacion,
-                                 imagen, creado_en, actualizado_en)
-        VALUES (tituloArt, cuerpoArt, autorID, categoriaID, resumenArt, NOW(), estadoArt, imagenArt, NOW(), NOW());
-    ELSEIF accion = 2 THEN
-        -- Delete an article by ID
-        DELETE FROM `articulos` WHERE `id` = articuloID;
-    ELSE
-        -- Invalid action
-        SELECT 'Invalid action. Use 1 to insert or 2 to delete.';
-    END IF;
-END //
-
-DELIMITER ;
-
--- ******************************************************************************************************************
--- *********************************************** TRIGGERS *********************************************************
--- ******************************************************************************************************************
-
--- Triggers para artículos
-
--- Trigger BEFORE INSERT
-DELIMITER //
-CREATE TRIGGER `before_articulos_insert`
-    BEFORE INSERT
-    ON `articulos`
-    FOR EACH ROW
-BEGIN
-    INSERT INTO `articulos_log` (`articulo_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'INSERT', NOW());
-END;
-//
-DELIMITER ;
-
--- Trigger AFTER UPDATE
-DELIMITER //
-CREATE TRIGGER `after_articulos_update`
-    AFTER UPDATE
-    ON `articulos`
-    FOR EACH ROW
-BEGIN
-    INSERT INTO `articulos_log` (`articulo_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'UPDATE', NOW());
-END;
-//
-DELIMITER ;
-
--- Triggers para comentarios
-
--- Trigger BEFORE DELETE
-DELIMITER //
-CREATE TRIGGER `before_comentarios_delete`
-    BEFORE DELETE
-    ON `comentarios`
-    FOR EACH ROW
-BEGIN
-    INSERT INTO `comentarios_log` (`comentario_id`, `accion`, `fecha_registro`) VALUES (OLD.`id`, 'DELETE', NOW());
-END;
-//
-DELIMITER ;
-
--- Trigger AFTER INSERT
-DELIMITER //
-CREATE TRIGGER `after_comentarios_insert`
-    AFTER INSERT
-    ON `comentarios`
-    FOR EACH ROW
-BEGIN
-    INSERT INTO `comentarios_log` (`comentario_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'INSERT', NOW());
-END;
-//
-DELIMITER ;
-
--- Triggers para la tabla votos
-
--- Trigger BEFORE DELETE
-DELIMITER //
-CREATE TRIGGER `before_votos_delete`
-    BEFORE DELETE
-    ON `votos`
-    FOR EACH ROW
-BEGIN
-    INSERT INTO `votos_log` (`voto_id`, `accion`, `fecha_registro`) VALUES (OLD.`id`, 'DELETE', NOW());
-END;
-//
-DELIMITER ;
-
--- Trigger AFTER INSERT
-DELIMITER //
-CREATE TRIGGER `after_votos_insert`
-    AFTER INSERT
-    ON `votos`
-    FOR EACH ROW
-BEGIN
-    INSERT INTO `votos_log` (`voto_id`, `accion`, `fecha_registro`) VALUES (NEW.`id`, 'INSERT', NOW());
-END;
-//
-DELIMITER ;
+-- Datos de ejemplo para la tabla hecho_articulos
+INSERT INTO hecho_articulos (articulo_id, fecha, cantidad_votos, cantidad_comentarios, promedio_votos)
+VALUES (18, '2022-10-30', 30, 5, 0.5),
+       (19, '2022-11-15', 17, 9, 0.85),
+       (20, '2022-12-20', 4, 3, 0.33),
+       (21, '2023-01-25', 50, 2, 0.5),
+       (22, '2023-02-28', 13, 7, 0.77),
+       (23, '2023-03-30', 19, 9, 0.9),
+       (24, '2023-04-10', 70, 5, 0.43);
 
 
 -- ******************************************************************************************************************
@@ -1003,18 +1013,42 @@ DELIMITER ;
 -- Llamar al procedimiento almacenado para realizar la actualización inicial
 CALL ActualizarHechoArticulos();
 
--- Datos de ejemplo para la tabla hecho_articulos
-INSERT INTO hecho_articulos (articulo_id, fecha, cantidad_votos, cantidad_comentarios, promedio_votos)
-VALUES (18, '2022-10-30', 30, 5, 0.5),
-       (19, '2022-11-15', 17, 9, 0.85),
-       (20, '2022-12-20', 4, 3, 0.33),
-       (21, '2023-01-25', 50, 2, 0.5),
-       (22, '2023-02-28', 13, 7, 0.77),
-       (23, '2023-03-30', 19, 9, 0.9),
-       (24, '2023-04-10', 70, 5, 0.43);
+/*
+-- Descomentar para visualizar las siguientes tablas
 
 -- visualizar la tabla de hechos
 SELECT *
 FROM hecho_articulos;
 
+-- Visualizar todas las tablas principales
+SELECT *
+FROM articulos;
 
+SELECT *
+FROM autores;
+
+SELECT *
+FROM categorias;
+
+SELECT *
+FROM comentarios;
+
+SELECT *
+FROM etiquetas;
+
+SELECT *
+FROM permisos;
+
+SELECT *
+FROM suscriptores;
+
+SELECT *
+FROM usuarios;
+
+SELECT *
+FROM votos;
+
+-- visualizar la tabla de hechos
+SELECT *
+FROM hecho_articulos;
+ */

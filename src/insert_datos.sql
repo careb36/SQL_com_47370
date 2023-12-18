@@ -1,5 +1,9 @@
 USE montevideo_noticias;
 
+-- ******************************************************************************************************************
+-- ******************************* INSERCION DE DATOS DE EJEMPLO ****************************************************
+-- ******************************************************************************************************************
+
 -- Datos de ejemplo para la tabla de usuarios con fechas aleatorias para el campo creado_en
 INSERT INTO usuarios (nombre, apellido, email, fecha_nacimiento, pais, localidad, foto_perfil, creado_en,
                       actualizado_en)
@@ -101,7 +105,37 @@ VALUES ('Juan Pérez', 'Periodista de investigación', 'Especialista en temas de
         '2023-10-23 12:00:00'),
        ('Marcela González', 'Periodista de viajes', 'Experta en turismo y viajes',
         'Twitter: @marcelagonzalez, Instagram: @marcelagonzalez', 'marcelagonzalez@montevideonoticias.com',
-        '2013-04-25 09:45:00', '2023-10-23 12:00:00');
+        '2013-04-25 09:45:00', '2023-10-23 12:00:00'),
+       ('Roberto', 'García', 'Experto en economía internacional', 'Twitter: @robertogarcia',
+        'roberto.garcia@montevideonoticias.com', '2014-03-15 09:00:00', '2023-10-23 12:00:00'),
+       ('Marta', 'Rodríguez', 'Especialista en medio ambiente', 'Instagram: @martarodriguez',
+        'marta.rodriguez@montevideonoticias.com', '2015-04-20 10:00:00', '2023-10-23 12:00:00'),
+       ('Carlos', 'López', 'Periodista deportivo', 'Facebook: CarlosLopez', 'carlos.lopez@montevideonoticias.com',
+        '2016-05-25 11:00:00', '2023-10-23 12:00:00'),
+       ('Sofía', 'Martínez', 'Experta en tecnologías emergentes', 'LinkedIn: sofiamartinez',
+        'sofia.martinez@montevideonoticias.com', '2017-06-30 12:00:00', '2023-10-23 12:00:00'),
+       ('Daniel', 'Fernández', 'Crítico de cine y teatro', 'Twitter: @danielfernandez',
+        'daniel.fernandez@montevideonoticias.com', '2018-07-15 13:00:00', '2023-10-23 12:00:00'),
+       ('Laura', 'Gomez', 'Experta en salud pública', 'Instagram: @lauragomez', 'laura.gomez@montevideonoticias.com',
+        '2019-08-20 14:00:00', '2023-10-23 12:00:00'),
+       ('Antonio', 'Ruiz', 'Especialista en historia latinoamericana', 'Facebook: AntonioRuiz',
+        'antonio.ruiz@montevideonoticias.com', '2020-09-10 15:00:00', '2023-10-23 12:00:00'),
+       ('Elena', 'Vazquez', 'Periodista en temas de educación', 'Twitter: @elenavazquez',
+        'elena.vazquez@montevideonoticias.com', '2021-10-05 16:00:00', '2023-10-23 12:00:00'),
+       ('Pedro', 'Molina', 'Analista político', 'LinkedIn: pedromolina', 'pedro.molina@montevideonoticias.com',
+        '2022-11-20 17:00:00', '2023-10-23 12:00:00'),
+       ('Carmen', 'Hernández', 'Experta en gastronomía y nutrición', 'Instagram: @carmenhernandez',
+        'carmen.hernandez@montevideonoticias.com', '2023-01-15 09:00:00', '2023-10-23 12:00:00'),
+       ('Federico', 'Alvarez', 'Especialista en seguridad informática', 'Twitter: @federicoalvarez',
+        'federico.alvarez@montevideonoticias.com', '2023-02-20 10:00:00', '2023-10-23 12:00:00'),
+       ('Isabel', 'Morales', 'Periodista en temas sociales', 'Facebook: IsabelMorales',
+        'isabel.morales@montevideonoticias.com', '2023-03-25 11:00:00', '2023-10-23 12:00:00'),
+       ('Juan', 'Díaz', 'Experto en finanzas y mercados internacionales', 'LinkedIn: juandiaz',
+        'juan.diaz@montevideonoticias.com', '2023-04-30 12:00:00', '2023-10-23 12:00:00'),
+       ('Lucía', 'Ramírez', 'Periodista cultural', 'Instagram: @luciaramirez', 'lucia.ramirez@montevideonoticias.com',
+        '2023-05-15 13:00:00', '2023-10-23 12:00:00'),
+       ('Gabriel', 'Torres', 'Especialista en temas de energías renovables', 'Twitter: @gabrieltorres',
+        'gabriel.torres@montevideonoticias.com', '2023-06-20 14:00:00', '2023-10-23 12:00:00');
 
 
 -- Datos de ejemplo para la tabla de artículos
@@ -142,7 +176,63 @@ VALUES ('Reunión de presidentes: Uruguay y Argentina abordan desafíos económi
        ('Realme: Éxito de ventas global con su nuevo celular',
         'El nuevo celular de Realme se vuelve un éxito de ventas a nivel mundial.', 5, 3,
         'Realme: Éxito de ventas global con su nuevo celular', '2023-10-13 15:15:00', 'publicado',
-        'https://acortar.link/xeURWz', '2023-10-13 15:15:00', '2023-10-13 15:15:00');
+        'https://acortar.link/xeURWz', '2023-10-13 15:15:00', '2023-10-13 15:15:00'),
+       ('Innovación en Energías Renovables', 'Explorando las últimas tendencias en energías renovables.', 9, 4,
+        'Innovación en Energías Renovables', '2023-10-14 09:00:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-14 09:00:00', '2023-10-14 09:00:00')
+        ,
+       ('Nuevas Tendencias en la Moda Sostenible', 'La moda se encuentra con la sostenibilidad.', 10, 5,
+        'Nuevas Tendencias en la Moda Sostenible', '2023-10-15 10:30:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-15 10:30:00', '2023-10-15 10:30:00')
+        ,
+       ('Avances en la IA y el Aprendizaje Automático', 'IA y aprendizaje automático revolucionando la tecnología.', 11,
+        3, 'Avances en la IA', '2023-10-16 11:00:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-16 11:00:00',
+        '2023-10-16 11:00:00')
+        ,
+       ('El Futuro de la Medicina Digital', 'Innovaciones en el campo de la medicina digital.', 12, 6,
+        'Medicina Digital', '2023-10-17 12:00:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-17 12:00:00',
+        '2023-10-17 12:00:00')
+        ,
+       ('Impacto del Cambio Climático en la Agricultura',
+        'Análisis del cambio climático y su impacto en la agricultura.', 13, 7, 'Cambio Climático y Agricultura',
+        '2023-10-18 08:00:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-18 08:00:00', '2023-10-18 08:00:00')
+        ,
+       ('Explorando el Espacio: Nuevos Descubrimientos', 'Descubrimientos recientes en la exploración espacial.', 14, 8,
+        'Exploración Espacial', '2023-10-19 09:30:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-19 09:30:00', '2023-10-19 09:30:00')
+        ,
+       ('Crecimiento de las Ciudades Inteligentes', 'El avance de las ciudades inteligentes en el mundo moderno.', 15,
+        3, 'Ciudades Inteligentes', '2023-10-20 10:45:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-20 10:45:00', '2023-10-20 10:45:00')
+        ,
+       ('Innovación en Transporte Eléctrico', 'La revolución del transporte eléctrico.', 16, 4, 'Transporte Eléctrico',
+        '2023-10-21 11:30:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-21 11:30:00', '2023-10-21 11:30:00')
+        ,
+       ('Descubrimientos en Biotecnología', 'Avances recientes en el campo de la biotecnología.', 17, 6,
+        'Biotecnología', '2023-10-22 12:15:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-22 12:15:00',
+        '2023-10-22 12:15:00')
+        ,
+       ('Revolución de las Fintech', 'Las fintech y su impacto en el sector financiero.', 18, 5, 'Fintech',
+        '2023-10-23 13:00:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-23 13:00:00', '2023-10-23 13:00:00')
+        ,
+       ('Tecnologías Emergentes en Educación', 'Cómo las nuevas tecnologías están transformando la educación.', 19, 9,
+        'Educación y Tecnología', '2023-10-24 14:00:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-24 14:00:00', '2023-10-24 14:00:00')
+        ,
+       ('Desarrollo Sostenible y Empresas', 'Las empresas y su papel en el desarrollo sostenible.', 20, 10,
+        'Empresas y Sostenibilidad', '2023-10-25 15:30:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-25 15:30:00', '2023-10-25 15:30:00')
+        ,
+       ('Avances en Robótica', 'La evolución y el futuro de la robótica.', 21, 3, 'Robótica', '2023-10-26 16:45:00',
+        'publicado', 'https://acortar.link/xeURWz', '2023-10-26 16:45:00', '2023-10-26 16:45:00')
+        ,
+       ('Realidad Virtual en el Entretenimiento',
+        'El impacto de la realidad virtual en la industria del entretenimiento.', 22, 8, 'Realidad Virtual',
+        '2023-10-27 17:00:00', 'publicado', 'https://acortar.link/xeURWz', '2023-10-27 17:00:00', '2023-10-27 17:00:00')
+        ,
+       ('Tendencias Globales en Alimentación', 'Explorando las tendencias actuales en la industria alimentaria.', 23, 7,
+        'Alimentación y Tendencias', '2023-10-28 18:15:00', 'publicado', 'https://acortar.link/xeURWz',
+        '2023-10-28 18:15:00', '2023-10-28 18:15:00');
 
 -- Datos de ejemplo para la tabla de comentarios
 INSERT INTO comentarios (articulo_id, autor_id, cuerpo, fecha_publicacion, estado_publicacion, creado_en,
@@ -292,3 +382,13 @@ VALUES (1, 1),
        (1, 7),
        (1, 8);
 
+-- Datos de ejemplo para la tabla hecho_articulos
+INSERT INTO hecho_articulos (articulo_id, fecha, cantidad_votos, cantidad_comentarios, promedio_votos)
+VALUES
+    (18, '2022-10-30', 30, 5, 0.5),
+    (19, '2022-11-15', 17, 9, 0.85),
+    (20, '2022-12-20', 4, 3, 0.33),
+    (21, '2023-01-25', 50, 2, 0.5),
+    (22, '2023-02-28', 13, 7, 0.77),
+    (23, '2023-03-30', 19, 9, 0.9),
+    (24, '2023-04-10', 70, 5, 0.43);
