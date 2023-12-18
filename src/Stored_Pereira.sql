@@ -32,14 +32,15 @@ CREATE PROCEDURE InsertarEliminarArticulo(
     IN autorID INT, -- ID del autor (para inserción)
     IN categoriaID INT, -- ID de la categoría (para inserción)
     IN resumenArt TEXT, -- Resumen del artículo (para inserción)
-    IN estadoArt ENUM('publicado', 'borrador'), -- Estado de publicación (para inserción)
+    IN estadoArt ENUM ('publicado', 'borrador'), -- Estado de publicación (para inserción)
     IN imagenArt VARCHAR(255), -- URL de la imagen (para inserción)
     IN articuloID INT -- ID del artículo (para eliminación)
 )
 BEGIN
     IF accion = 1 THEN
         -- Insertar un nuevo artículo
-        INSERT INTO articulos (titulo, cuerpo, autor_id, categoria_id, resumen, fecha_publicacion, estado_publicacion, imagen, creado_en, actualizado_en)
+        INSERT INTO articulos (titulo, cuerpo, autor_id, categoria_id, resumen, fecha_publicacion, estado_publicacion,
+                               imagen, creado_en, actualizado_en)
         VALUES (tituloArt, cuerpoArt, autorID, categoriaID, resumenArt, NOW(), estadoArt, imagenArt, NOW(), NOW());
     ELSEIF accion = 2 THEN
         -- Eliminar un artículo por ID
@@ -61,8 +62,11 @@ Había dos cupos para los países de Centro y Sudamérica a los Juegos Olímpico
 
 De esta manera, la clase Ilca 6 de vela se suma a la clase 49er, al rugby seven, al ciclismo masculino en la prueba de ruta (un cupo) y al maratón de atletismo (un cupo) como los deportes ya clasificados que representarán a Uruguay en Paris 2024.
 
-FútbolUy. Seguinos en Twitter @futbolportaluy', 1, 2, 'Panamericanos: Dolores Moreira logró la clasificación a los Juegos Olímpicos en vela', 'publicado', 'https://imagenes.montevideo.com.uy/imgnoticias/202310/_W933_80/860875.jpg');
+FútbolUy. Seguinos en Twitter @futbolportaluy', 1, 2,
+                              'Panamericanos: Dolores Moreira logró la clasificación a los Juegos Olímpicos en vela',
+                              'publicado', 'https://imagenes.montevideo.com.uy/imgnoticias/202310/_W933_80/860875.jpg');
 
 CALL OrdenarArticulos('fecha_publicacion', 'DESC'); -- Llamada al SP para visualizar los articulos y verificar cual eliminar
-CALL InsertarEliminarArticulo(2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 10); -- Llamada al procedimiento para eliminar un artículo por su numero de id
+CALL InsertarEliminarArticulo(2, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                              10); -- Llamada al procedimiento para eliminar un artículo por su numero de id
 CALL OrdenarArticulos('fecha_publicacion', 'DESC'); -- Llamada al SP para visualizar los articulos y verificar el que acabamos de eliminar

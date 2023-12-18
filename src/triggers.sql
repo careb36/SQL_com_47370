@@ -22,14 +22,6 @@ END;
 //
 DELIMITER ;
 
--- Crear tabla de registro para comentarios
-CREATE TABLE `comentarios_log` (
-  `log_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `comentario_id` INT,
-  `accion` VARCHAR(255),
-  `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Trigger BEFORE para comentarios (antes de la operación)
 DELIMITER //
 CREATE TRIGGER before_comentarios_delete
