@@ -15,6 +15,7 @@ Al finalizar este curso, los estudiantes serán capaces de:
 
 ## Presentación
 
-Puedes ver la presentación completa en [Canva](https://cdn-images-1.medium.com/v2/resize:fit:1200/1*A6kkoOVJVpXPWewg8axc5w.png).
+Puedes ver la presentación completa en [Canva](https://www.canva.com/design/DAF186ve7Nw/ToYUWVD7yY4JhJdEsSnPZw/edit?utm_content=DAF186ve7Nw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
+
 
 
